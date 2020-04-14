@@ -1,15 +1,13 @@
-changeColor();
+const CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
-function changeColor() {
-    const randomColor = getRandomColor();
-    console.log(randomColor);
-    document.body.style.backgroundColor = randomColor;
+showLetter();
+
+function getRandomChar() {
+    let index = Math.floor(Math.random() * CHARACTERS.length);
+    return CHARACTERS.charAt(index);
 }
 
-function getRandomColor() {
-    let color = "#";
-    for (let i = 0; i < 6; i++){
-        color += Math.floor(Math.random() * 16).toString(16);
-    }
-    return color;
+function showLetter() {
+    const letterElement = document.getElementById("letter");
+    letterElement.innerText = getRandomChar();
 }
