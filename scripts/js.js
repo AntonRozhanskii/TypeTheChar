@@ -1,4 +1,4 @@
-const CHARACTERS = 'abcdefghijklmnopqrstuvwxyz ';
+const CHARACTERS = 'abcdefghijklmnopqrstuvwxyz,.;\'[]';
 let currentChar;
 let pressedKey;
 
