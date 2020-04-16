@@ -1,6 +1,5 @@
-const CHARACTERS = 'abcdefghijklmnopqrstuvwxyz,.;\'[]';
+const CHARACTERS = 'abcdefghijklmnopqrstuvwxyz,.;\'[]/';
 let currentChar;
-let pressedKey;
 
 showNewLetter();
 document.onkeydown = compareKeys;
@@ -26,7 +25,7 @@ function setNewLetter() {
 }
 
 function compareKeys(e) {
-    pressedKey = e.key;
+    let pressedKey = e.key;
     showKeyPressed(pressedKey);
     if (pressedKey == currentChar) {
         showNewLetter();
@@ -35,5 +34,7 @@ function compareKeys(e) {
 
 function showKeyPressed(char) {
     const pressedKeyElement = document.getElementById("pressed");
-    pressedKeyElement.innerText = char;
+    if (CHARACTERS.includes(char)) {
+        pressedKeyElement.innerText = char;
+    }
 }
