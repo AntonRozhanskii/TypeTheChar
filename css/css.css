@@ -1,8 +1,26 @@
-#root {
-    text-align: center;
+.row {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+}
+
+.queue {
+    display: flex;
+    min-width: 120px;
 }
 
 .letter {
-    font-size: 3em;
-    height: 1em;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+}
+
+.current {
+    font-weight: bold;
+    font-size: 2em;
+    width: auto;
+}
+
+#tail {
+    justify-content: flex-end;
 }
