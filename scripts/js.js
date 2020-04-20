@@ -12,7 +12,19 @@ const CHARACTERS = 'abcdefghijklmnopqrstuvwxyz,.;\'[]/';
  * @type {number}
  */
 const limbLength = 4;
+
+/**
+ * Whole bunch of symbols to type,
+ * including short history of already typed characters,
+ * target letter and small amount of upcoming symbols.
+ * @type {array}
+ */
 let theQueue;
+
+/**
+ * Index in {@link theQueue} which is used to show current
+ * @type {number}
+ */
 let targetCharIndex;
 
 setUp();
@@ -76,7 +88,7 @@ function displayTheQueue() {
 function createTail() {
     let tailStart = (targetCharIndex - limbLength) >= 0 ? targetCharIndex - limbLength : 0 ;
     let tailEnd = targetCharIndex;
-    displayArray(tailStart, tailEnd, "tail");
+    displaySubQueue(tailStart, tailEnd, "tail");
 }
 
 function showTargetChar() {
@@ -93,10 +105,10 @@ function showTargetChar() {
 function displayHead() {
     let headStart = targetCharIndex + 1;
     let headEnd = targetCharIndex + 1 + limbLength + 1;
-    displayArray(headStart, headEnd, "head")
+    displaySubQueue(headStart, headEnd, "head")
 }
 
-function displayArray(limbStart, limbEnd, elementId) {
+function displaySubQueue(limbStart, limbEnd, elementId) {
     let limb = theQueue.slice(limbStart, limbEnd)
     const htmlLimb = document.getElementById(elementId);
     htmlLimb.innerHTML = "";
