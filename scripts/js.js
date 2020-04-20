@@ -12,17 +12,28 @@ const CHARACTERS = 'abcdefghijklmnopqrstuvwxyz,.;\'[]/';
  * @type {number}
  */
 const limbLength = 4;
-let theQueue = [];
-let targetCharIndex = 0;
+let theQueue;
+let targetCharIndex;
 
+setUp();
 topUpTheQueue();
 displayTheQueue();
 document.onkeydown = processKeyDownEvent;
 
+function setUp() {
+    theQueue = [];
+    targetCharIndex = 0;
+    const queueParts = document.getElementsByClassName("queue");
+    Array.from(queueParts).forEach(e => {
+        e.style.minWidth = (limbLength * 30) + 'px';
+    });
+}
+
 function processKeyDownEvent(e) {
+    e.preventDefault(); // prevents, for example, firefox's 'quick find', called by hitting '/'
     let pressedKey = e.key;
     showKeyPressed(pressedKey);
-    if (pressedKey == theQueue[targetCharIndex]) {
+    if (pressedKey === theQueue[targetCharIndex]) {
         moveTheQueue();
     }
 }
@@ -63,12 +74,9 @@ function displayTheQueue() {
 }
 
 function createTail() {
-    let beginningIndex = (targetCharIndex - limbLength) >= 0 ? targetCharIndex - limbLength : 0 ;
-    let lastDisplayedIndex = targetCharIndex;
-    let tail = theQueue.slice(beginningIndex, lastDisplayedIndex)
-    const htmlTail = document.getElementById("tail");
-    htmlTail.innerHTML = "";
-    tail.forEach(e => htmlTail.appendChild(getQueueHtmlElement(e)));
+    let tailStart = (targetCharIndex - limbLength) >= 0 ? targetCharIndex - limbLength : 0 ;
+    let tailEnd = targetCharIndex;
+    displayArray(tailStart, tailEnd, "tail");
 }
 
 function showTargetChar() {
@@ -83,12 +91,16 @@ function showTargetChar() {
 }
 
 function displayHead() {
-    let beginningIndex = targetCharIndex + 1;
-    let lastDisplayedIndex = targetCharIndex + 1 + limbLength + 1;
-    let limb = theQueue.slice(beginningIndex, lastDisplayedIndex)
-    const htmlHead = document.getElementById("head");
-    htmlHead.innerHTML = "";
-    limb.forEach(e => htmlHead.appendChild(getQueueHtmlElement(e)));
+    let headStart = targetCharIndex + 1;
+    let headEnd = targetCharIndex + 1 + limbLength + 1;
+    displayArray(headStart, headEnd, "head")
+}
+
+function displayArray(limbStart, limbEnd, elementId) {
+    let limb = theQueue.slice(limbStart, limbEnd)
+    const htmlLimb = document.getElementById(elementId);
+    htmlLimb.innerHTML = "";
+    limb.forEach(e => htmlLimb.appendChild(getQueueHtmlElement(e)));
 }
 
 function getQueueHtmlElement(symbol) {
