@@ -1,8 +1,32 @@
-#root {
-    text-align: center;
+.row {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+}
+
+.queue {
+    display: flex;
 }
 
 .letter {
-    font-size: 3em;
-    height: 1em;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.current {
+    font-weight: bold;
+    font-size: 2.3em;
+    width: auto;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+#tail {
+    justify-content: flex-end;
+}
+
+.vertical-gap {
+    height: 10em;
 }
