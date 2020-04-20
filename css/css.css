@@ -26,3 +26,7 @@
 #tail {
     justify-content: flex-end;
 }
+
+.vertical-gap {
+    height: 10em;
+}
