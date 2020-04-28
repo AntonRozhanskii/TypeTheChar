@@ -1,11 +1,37 @@
+body {
+    margin: 0;
+}
+
+#root {
+    display: flex;
+    flex-direction: row;
+}
+
+#menu {
+    flex-grow: 0;
+    width: 200px;
+}
+
+#content {
+    display: flex;
+    flex-grow: 4;
+    flex-direction: column;
+}
+
+#settings {
+    flex-grow: 0;
+    width: 200px;
+}
+
 .row {
     display: flex;
     justify-content: center;
-    align-items: baseline;
+    align-items: flex-end;
 }
 
 .queue {
     display: flex;
+    flex-grow: 1;
 }
 
 .letter {
@@ -18,9 +44,7 @@
 .current {
     font-weight: bold;
     font-size: 2.3em;
-    width: auto;
-    margin-right: 20px;
-    margin-left: 20px;
+    margin: 30px 20px;
 }
 
 #tail {

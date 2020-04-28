@@ -1,8 +1,4 @@
-/**
- * List of symbols, which are going to be practiced
- * @type {string}
- */
-const CHARACTERS = 'abcdefghijklmnopqrstuvwxyz,.;\'[]/';
+import {Queue} from "./Queue.js";
 
 /**
  * Amount of characters before the target letter
@@ -17,102 +13,77 @@ const limbLength = 4;
  * Whole bunch of symbols to type,
  * including short history of already typed characters,
  * target letter and small amount of upcoming symbols.
- * @type {array}
+ * @type {Queue}
  */
 let theQueue;
 
-/**
- * Index in {@link theQueue} which is used to show current
- * @type {number}
- */
-let targetCharIndex;
-
 setUp();
-topUpTheQueue();
 displayTheQueue();
 document.onkeydown = processKeyDownEvent;
 
 function setUp() {
-    theQueue = [];
-    targetCharIndex = 0;
-    const queueParts = document.getElementsByClassName("queue");
-    Array.from(queueParts).forEach(e => {
-        e.style.minWidth = (limbLength * 30) + 'px';
-    });
+    theQueue = new Queue();
 }
 
+/**
+ * Is used to filter symbols, which can be displayed,
+ * I am not going to show 'Control', 'Alt' and so forth.
+ * @type {RegExp}
+ */
+const DISPLAYABLE_SYMBOLS = new RegExp('^.$');
+
+// TODO one day
+//  Consider changing e.preventDefault()'s logic
+//  With e.preventDefault() Chrome's DevTools panel is not opened until focus is on the document
+//  Also, CTRL+f does'n work now.
 function processKeyDownEvent(e) {
-    e.preventDefault(); // prevents, for example, firefox's 'quick find', called by hitting '/'
-    let pressedKey = e.key;
-    showKeyPressed(pressedKey);
-    if (pressedKey === theQueue[targetCharIndex]) {
-        moveTheQueue();
+    let pressedSymbol = e.key;
+    if (DISPLAYABLE_SYMBOLS.test(pressedSymbol)) {
+        e.preventDefault(); // prevents, for example, firefox's 'quick find', called by hitting '/'
+        showKeyPressed(pressedSymbol);
+        if (pressedSymbol === theQueue.getCurrentCharacter()) {
+            theQueue.step();
+            displayTheQueue();
+        }
     }
 }
 
 function showKeyPressed(char) {
     const pressedKeyElement = document.getElementById("pressed");
-    if (CHARACTERS.includes(char)) {
-        pressedKeyElement.innerText = char;
-    }
-}
-
-function moveTheQueue() {
-    if (targetCharIndex < limbLength) {
-        targetCharIndex++;
-    } else {
-        theQueue.shift();
-    }
-    topUpTheQueue();
-    displayTheQueue();
-}
-
-function topUpTheQueue() {
-    while (theQueue.length < (targetCharIndex + 1) + limbLength) {
-        theQueue.push(getRandomLetter());
-    }
-}
-
-function getRandomLetter() {
-    const index = Math.floor(Math.random() * CHARACTERS.length);
-    const candidate = CHARACTERS.charAt(index);
-    return candidate;
+    pressedKeyElement.innerText = char;
 }
 
 function displayTheQueue() {
-    createTail();
-    showTargetChar();
+    displayTail();
+    displayTargetChar();
     displayHead();
 }
 
-function createTail() {
-    let tailStart = (targetCharIndex - limbLength) >= 0 ? targetCharIndex - limbLength : 0 ;
-    let tailEnd = targetCharIndex;
-    displaySubQueue(tailStart, tailEnd, "tail");
+function displayTail() {
+    let tail = theQueue.getPast().slice(-limbLength);
+    const tailHtml = document.getElementById("tail");
+    tailHtml.innerHTML = "";
+    for (let i = 0; i < limbLength; i++) {
+        const char = tail.pop();
+        let letter = getQueueHtmlElement(char ? char : "");
+        tailHtml.prepend(letter);
+    }
 }
 
-function showTargetChar() {
+function displayTargetChar() {
     const letterElement = document.getElementById("target");
-    let targetChar;
-    if (typeof targetCharIndex === "number") {
-        targetChar = theQueue[targetCharIndex];
-    } else {
-        targetChar = 'error';
-    }
-    letterElement.innerText = targetChar;
+    letterElement.innerText = theQueue.getCurrentCharacter();
 }
 
 function displayHead() {
-    let headStart = targetCharIndex + 1;
-    let headEnd = targetCharIndex + 1 + limbLength + 1;
-    displaySubQueue(headStart, headEnd, "head")
-}
-
-function displaySubQueue(limbStart, limbEnd, elementId) {
-    let limb = theQueue.slice(limbStart, limbEnd)
-    const htmlLimb = document.getElementById(elementId);
-    htmlLimb.innerHTML = "";
-    limb.forEach(e => htmlLimb.appendChild(getQueueHtmlElement(e)));
+    let head = theQueue.getFuture().slice(0, limbLength);
+    const headHtml = document.getElementById("head");
+    headHtml.innerHTML = "";
+    for (let i = 0; i < limbLength; i++) {
+        const char = head[i];
+        let letter = getQueueHtmlElement(char ? char : "");
+        headHtml.appendChild(letter);
+    }
 }
 
 function getQueueHtmlElement(symbol) {

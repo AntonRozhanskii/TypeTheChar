@@ -5,17 +5,23 @@
 </head>
 <body>
 <div id="root">
-    <div class="vertical-gap"></div>
-    <div class="row">
-        <p id="tail" class="queue"></p>
-        <p id="target" class="letter current"></p>
-        <p id="head" class="queue"></p>
+    <div id="menu"></div>
+    <div id="content">
+        <div id="lesson">
+            <div class="vertical-gap"></div>
+            <div class="row">
+                <p id="tail" class="queue"></p>
+                <p id="target" class="letter current"></p>
+                <p id="head" class="queue"></p>
+            </div>
+            <hr>
+            <div class="row">
+                <p id="pressed" class="letter current"></p>
+            </div>
+        </div>
     </div>
-    <hr>
-    <div class="row">
-        <p id="pressed" class="letter current"></p>
-    </div>
+    <div id="settings" class="component"></div>
 </div>
 </body>
-<script src="scripts/js.js" type="text/javascript"></script>
+<script src="scripts/js.js" type="module"></script>
 </html>
