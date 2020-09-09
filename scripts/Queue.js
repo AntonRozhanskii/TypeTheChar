@@ -4,7 +4,7 @@
  */
 const CHARACTERS = 'abcdefghijklmnopqrstuvwxyz,.;\'[]/';
 
-const MAX_LENGTH = 100;
+const SEGMENT_MAX_LENGTH = 100;
 
 let past = [];
 let current = "";
@@ -20,10 +20,6 @@ export class Queue {
         return current;
     }
 
-    getCharacters() {
-        return CHARACTERS;
-    }
-
     getFuture() {
         return future;
     }
@@ -32,18 +28,26 @@ export class Queue {
         return past;
     }
 
+    insertArray(index, characters) {
+        for (let i = 0; i < characters.length; i++) {
+            insertCharacter(index, characters[i]);
+        }
+    }
+
     step() {
-        future.push(getRandomLetter());
+        if (future.length <= SEGMENT_MAX_LENGTH) {
+            future.push(getRandomLetter());
+        }
         past.push(current);
         current = future.shift();
-        if (past.length > MAX_LENGTH) {
+        if (past.length > SEGMENT_MAX_LENGTH) {
             past.shift();
         }
     }
 }
 
 function topUp() {
-    while (future.length < MAX_LENGTH + 1) {
+    while (future.length < SEGMENT_MAX_LENGTH + 1) {
         future.push(getRandomLetter());
     }
     current = future.shift();
@@ -64,4 +68,8 @@ function getRandomLetter() {
     } while (candidate === lastGenerated);
     lastGenerated = candidate;
     return candidate;
+}
+
+function insertCharacter(index, character) {
+    future.splice(index, 0, character);
 }

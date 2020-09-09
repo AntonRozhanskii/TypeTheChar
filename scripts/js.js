@@ -1,21 +1,24 @@
 import {Queue} from "./Queue.js";
+import {Lesson} from "./Lesson.js";
 
 /**
  * Amount of characters before the target letter
  * and after it. So, there going to be<br>
- * limbLength (for tail) + 1 (for target letter) + limbLength (for head)
+ * DISPLAYABLE_SEGMENT_LENGTH (for tail) + 1 (for target letter) + DISPLAYABLE_SEGMENT_LENGTH (for head)
  * characters
  * @type {number}
  */
-const limbLength = 4;
+const DISPLAYABLE_SEGMENT_LENGTH = 4;
 
 /**
- * Whole bunch of symbols to type,
+ * Whole bunch of symbols to type and already typed as well
  * including short history of already typed characters,
  * target letter and small amount of upcoming symbols.
  * @type {Queue}
  */
 let theQueue;
+
+let lesson;
 
 setUp();
 displayTheQueue();
@@ -23,6 +26,7 @@ document.onkeydown = processKeyDownEvent;
 
 function setUp() {
     theQueue = new Queue();
+    lesson = new Lesson();
 }
 
 /**
@@ -44,6 +48,8 @@ function processKeyDownEvent(e) {
         if (pressedSymbol === theQueue.getCurrentCharacter()) {
             theQueue.step();
             displayTheQueue();
+        } else {
+            theQueue.insertArray(DISPLAYABLE_SEGMENT_LENGTH, lesson.getLesson(theQueue.getCurrentCharacter()));
         }
     }
 }
@@ -59,11 +65,14 @@ function displayTheQueue() {
     displayHead();
 }
 
+/**
+ * Displays characters which have already been successfully typed
+ */
 function displayTail() {
-    let tail = theQueue.getPast().slice(-limbLength);
+    let tail = theQueue.getPast().slice(-DISPLAYABLE_SEGMENT_LENGTH);
     const tailHtml = document.getElementById("tail");
     tailHtml.innerHTML = "";
-    for (let i = 0; i < limbLength; i++) {
+    for (let i = 0; i < DISPLAYABLE_SEGMENT_LENGTH; i++) {
         const char = tail.pop();
         let letter = getQueueHtmlElement(char ? char : "");
         tailHtml.prepend(letter);
@@ -75,11 +84,14 @@ function displayTargetChar() {
     letterElement.innerText = theQueue.getCurrentCharacter();
 }
 
+/**
+ * Displays characters to be typed
+ */
 function displayHead() {
-    let head = theQueue.getFuture().slice(0, limbLength);
+    let head = theQueue.getFuture().slice(0, DISPLAYABLE_SEGMENT_LENGTH);
     const headHtml = document.getElementById("head");
     headHtml.innerHTML = "";
-    for (let i = 0; i < limbLength; i++) {
+    for (let i = 0; i < DISPLAYABLE_SEGMENT_LENGTH; i++) {
         const char = head[i];
         let letter = getQueueHtmlElement(char ? char : "");
         headHtml.appendChild(letter);
